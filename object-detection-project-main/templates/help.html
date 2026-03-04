@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help | Objectify Support</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { 
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #ffffff;
+    }
+    .mesh-gradient {
+        background-color: #ffffff;
+        background-image: 
+            radial-gradient(at 0% 0%, hsla(210,100%,93%,1) 0, transparent 50%), 
+            radial-gradient(at 100% 100%, hsla(210,100%,95%,1) 0, transparent 50%);
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.02);
+    }
+    details summary::-webkit-details-marker { display:none; }
+    details[open] summary svg { transform: rotate(180deg); }
+    .step-icon {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    }
+  </style>
+</head>
+
+<body class="text-slate-800 flex flex-col min-h-screen mesh-gradient">
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
+  <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+    <!-- Logo LEFT -->
+    <div class="flex items-center space-x-2">
+      <div class="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-100">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <circle cx="12" cy="11" r="3"/>
+          <path d="M12 8v0m0 6v0m3-3v0m-6 0v0"/>
+        </svg>
+      </div>
+      <span class="text-xl font-[800]">Objectify</span>
+    </div>
+
+    <!-- Navigation CENTER -->
+    <ul class="flex items-center gap-8">
+      <li><a href="/" class="text-base font-semibold text-slate-700">Home</a></li>
+      <li><a href="/about" class="text-base font-semibold text-slate-700">About</a></li>
+      <li><a href="/live-upload" class="text-base font-semibold text-slate-700">Live Upload</a></li>
+      <li><a href="/help" class="text-base font-semibold text-blue-600">Help</a></li>
+    </ul>
+
+    <!-- RIGHT: Profile Dropdown -->
+    <div class="flex items-center gap-3">
+      <li id="profileDropdown" class="relative list-none">
+        <button id="profileBtn" class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all duration-300">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-200 py-2 z-50">
+          <a href="/saved-tests" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Saved Tests</span>
+          </a>
+          <button id="logoutBtnDropdown" class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </li>
+    </div>
+  </nav>
+</header>
+
+<main class="flex-grow max-w-5xl mx-auto px-8 py-16">
+  
+  <section class="text-center mb-20">
+    
+    <h1 class="text-5xl font-extrabold text-slate-900 mb-4 tracking-tight text-center">Help & Support ❓</h1>
+    
+  </section>
+
+  <section class="mb-24">
+    <div class="glass-card rounded-[3rem] p-12 border border-slate-100">
+      <h2 class="text-2xl font-extrabold text-slate-900 mb-12 flex items-center gap-4">
+        <span class="w-2 h-8 bg-blue-600 rounded-full"></span>
+        How to Use This System
+      </h2>
+
+      <div class="space-y-12">
+        <div class="flex items-start gap-8 group">
+          <div class="step-icon w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-100 flex-shrink-0 transition-transform group-hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-5-8l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Upload Your Image</h3>
+            <p class="text-slate-500 leading-relaxed">Navigate to the "Live Upload" page and either drag-and-drop an image or click to browse your files. You may also capture an image using your webcam.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-8 group">
+          <div class="step-icon w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-100 flex-shrink-0 transition-transform group-hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 5h18M4 7h16l-1.4 9.4a2 2 0 01-2 1.6H7.4a2 2 0 01-2-1.6L4 7zm8 4v4m-2-2h4" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Preview & Confirm</h3>
+            <p class="text-slate-500 leading-relaxed">Review the uploaded or captured image in the preview window. Ensure the object is clearly visible and well-centered for optimal detection results.</p>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-8 group">
+          <div class="step-icon w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-blue-100 flex-shrink-0 transition-transform group-hover:scale-110">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M9 17V9m4 8v-6m4 6v-4" />
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-xl font-bold text-slate-900 mb-2">Analyze Results</h3>
+            <p class="text-slate-500 leading-relaxed">Click "Analyze Image" — your image is processed by all 8 ML & DL models and results are displayed in an interactive bar graph.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-24">
+    <h2 class="text-4xl font-extrabold text-center text-slate-900 mb-12">Frequently Asked Questions</h2>
+    <div class="space-y-4 max-w-4xl mx-auto">
+      
+      <details class="group glass-card rounded-[2rem] overflow-hidden border border-slate-100">
+        <summary class="flex justify-between items-center p-7 cursor-pointer list-none">
+          <span class="text-lg font-bold text-slate-800">What types of images can I upload?</span>
+          <svg class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-7 pb-7 text-slate-500 leading-relaxed">
+          You can upload JPG, PNG, or JPEG images up to 10MB. Use clear, well-lit images with a single prominent object. Models detect persons, animals, vehicles, furniture, electronics, food items, sports equipment, and tools.
+        </div>
+      </details>
+
+      <details class="group glass-card rounded-[2rem] overflow-hidden border border-slate-100">
+        <summary class="flex justify-between items-center p-7 cursor-pointer list-none">
+          <span class="text-lg font-bold text-slate-800">How does the comparative analysis work?</span>
+          <svg class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-7 pb-7 text-slate-500 leading-relaxed">
+          Your image is processed through YOLO, CNN, ResNet-18, MobileNet, KNN, SVM, Decision Tree, and Random Forest. Each outputs a confidence score shown in a comparative bar chart.
+        </div>
+      </details>
+
+      <details class="group glass-card rounded-[2rem] overflow-hidden border border-slate-100">
+        <summary class="flex justify-between items-center p-7 cursor-pointer list-none">
+          <span class="text-lg font-bold text-slate-800">Which model is the most accurate?</span>
+          <svg class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-7 pb-7 text-slate-500 leading-relaxed">
+          Deep learning models (YOLO, CNN, ResNet-18, MobileNet) achieve the highest accuracy. YOLO typically performs best due to advanced real-time detection.
+        </div>
+      </details>
+
+      <details class="group glass-card rounded-[2rem] overflow-hidden border border-slate-100">
+        <summary class="flex justify-between items-center p-7 cursor-pointer list-none">
+          <span class="text-lg font-bold text-slate-800">Can I use the webcam on mobile devices?</span>
+          <svg class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-7 pb-7 text-slate-500 leading-relaxed">
+          Yes — works on modern mobile browsers. Allow camera permissions. If unavailable, use file upload instead.
+        </div>
+      </details>
+
+      <details class="group glass-card rounded-[2rem] overflow-hidden border border-slate-100">
+        <summary class="flex justify-between items-center p-7 cursor-pointer list-none">
+          <span class="text-lg font-bold text-slate-800">Is my uploaded data stored or shared?</span>
+          <svg class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-7 pb-7 text-slate-500 leading-relaxed">
+          No — all processing happens locally in your browser. Images are never stored or uploaded.
+        </div>
+      </details>
+
+      <details class="group glass-card rounded-[2rem] overflow-hidden border border-slate-100">
+        <summary class="flex justify-between items-center p-7 cursor-pointer list-none">
+          <span class="text-lg font-bold text-slate-800">What do the accuracy percentages mean?</span>
+          <svg class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-7 pb-7 text-slate-500 leading-relaxed">
+          Accuracy % = model confidence level. Scores above 85% are considered highly reliable.
+        </div>
+      </details>
+
+      <details class="group glass-card rounded-[2rem] overflow-hidden border border-slate-100">
+        <summary class="flex justify-between items-center p-7 cursor-pointer list-none">
+          <span class="text-lg font-bold text-slate-800">Why do different models show different accuracies?</span>
+          <svg class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-7 pb-7 text-slate-500 leading-relaxed">
+          Different algorithms — DL models learn patterns, ML models rely on statistical methods. Accuracy differences reflect model strengths.
+        </div>
+      </details>
+
+      <details class="group glass-card rounded-[2rem] overflow-hidden border border-slate-100">
+        <summary class="flex justify-between items-center p-7 cursor-pointer list-none">
+          <span class="text-lg font-bold text-slate-800">Can I test multiple images in one session?</span>
+          <svg class="w-5 h-5 text-slate-400 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-7 pb-7 text-slate-500 leading-relaxed">
+          Yes — after viewing results click “Test Another Image” and repeat as many times as you like.
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <section class="mb-20">
+    <h2 class="text-3xl font-extrabold text-slate-900 mb-8 text-center">Troubleshooting</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      
+      <div class="bg-amber-50/50 border border-amber-200 p-8 rounded-[2.5rem] shadow-sm">
+        <h3 class="font-bold text-amber-900 mb-2 flex items-center gap-2">
+            <span class="w-2 h-2 bg-amber-400 rounded-full"></span> Webcam not working
+        </h3>
+        <p class="text-amber-800/70 text-sm leading-relaxed">Enable browser camera permissions, refresh page, and retry.</p>
+      </div>
+
+      <div class="bg-amber-50/50 border border-amber-200 p-8 rounded-[2.5rem] shadow-sm">
+        <h3 class="font-bold text-amber-900 mb-2 flex items-center gap-2">
+            <span class="w-2 h-2 bg-amber-400 rounded-full"></span> Upload not responding
+        </h3>
+        <p class="text-amber-800/70 text-sm leading-relaxed">Supported formats only (JPG, PNG under 10MB). Enable JavaScript.</p>
+      </div>
+
+      <div class="bg-blue-50/50 border border-blue-200 p-8 rounded-[2.5rem] shadow-sm">
+        <h3 class="font-bold text-blue-900 mb-2 flex items-center gap-2">
+            <span class="w-2 h-2 bg-blue-400 rounded-full"></span> Low detection accuracy
+        </h3>
+        <p class="text-blue-800/70 text-sm leading-relaxed">Use high-quality, clear images with a single centered object.</p>
+      </div>
+
+      <div class="bg-blue-50/50 border border-blue-200 p-8 rounded-[2.5rem] shadow-sm">
+        <h3 class="font-bold text-blue-900 mb-2 flex items-center gap-2">
+            <span class="w-2 h-2 bg-blue-400 rounded-full"></span> Chart not displaying
+        </h3>
+        <p class="text-blue-800/70 text-sm leading-relaxed">Refresh page — ensure browser supports modern web features.</p>
+      </div>
+      
+    </div>
+  </section>
+</main>
+
+<footer class="bg-white border-t border-slate-100 py-12">
+  <div class="max-w-7xl mx-auto px-8 text-center text-slate-400 text-sm font-medium uppercase tracking-[0.2em]">
+    © 2026 Objectify Intelligence Dashboard | Academic Research Project
+  </div>
+</footer>
+
+<script>
+  // Check authentication and update UI
+  function checkAuthAndUpdateUI() {
+    const token = localStorage.getItem('authToken');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const logoutBtnDropdown = document.getElementById('logoutBtnDropdown');
+    const dropdownArrow = document.getElementById('dropdownArrow');
+    
+    if (token) {
+      if (profileDropdown) {
+        profileDropdown.classList.remove('hidden');
+        if (profileEmail && user.email) {
+          profileEmail.textContent = user.email.split('@')[0];
+        }
+      }
+      
+      // Toggle dropdown
+      if (profileBtn && dropdownMenu) {
+        profileBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dropdownMenu.classList.toggle('hidden');
+          dropdownArrow.style.transform = dropdownMenu.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.add('hidden');
+            dropdownArrow.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+      
+      // Logout
+      if (logoutBtnDropdown) {
+        logoutBtnDropdown.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+          location.reload();
+        });
+      }
+    }
+  }
+
+  // Run on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkAuthAndUpdateUI);
+  } else {
+    checkAuthAndUpdateUI();
+  }
+</script>
+
+</body>
+</html>

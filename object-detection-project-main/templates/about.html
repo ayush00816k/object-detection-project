@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Objectify Intelligence</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { 
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #ffffff;
+    }
+    .mesh-gradient {
+        background-color: #ffffff;
+        background-image: 
+            radial-gradient(at 0% 0%, hsla(210,100%,93%,1) 0, transparent 50%), 
+            radial-gradient(at 100% 100%, hsla(210,100%,95%,1) 0, transparent 50%);
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    .model-line {
+        border-left: 4px solid #3b82f6;
+        padding-left: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    .model-line:hover {
+        border-left-width: 8px;
+        background: rgba(59, 130, 246, 0.03);
+    }
+    .tech-card {
+        background: white;
+        border: 1px solid #f1f5f9;
+        transition: all 0.3s ease;
+    }
+    .tech-card:hover {
+        border-color: #3b82f6;
+        transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body class="text-slate-800 flex flex-col min-h-screen mesh-gradient">
+
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
+  <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+    <!-- Logo LEFT -->
+    <div class="flex items-center space-x-2">
+      <div class="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-100">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <circle cx="12" cy="11" r="3"/>
+          <path d="M12 8v0m0 6v0m3-3v0m-6 0v0"/>
+        </svg>
+      </div>
+      <span class="text-xl font-[800]">Objectify</span>
+    </div>
+
+    <!-- Navigation CENTER -->
+    <ul class="flex items-center gap-8">
+      <li><a href="/" class="text-base font-semibold text-slate-700">Home</a></li>
+      <li><a href="/about" class="text-base font-semibold text-blue-600">About</a></li>
+      <li><a href="/live-upload" class="text-base font-semibold text-slate-700">Live Upload</a></li>
+      <li><a href="/help" class="text-base font-semibold text-slate-700">Help</a></li>
+    </ul>
+
+    <!-- RIGHT: Profile Dropdown -->
+    <div class="flex items-center gap-3">
+      <li id="profileDropdown" class="relative list-none">
+        <button id="profileBtn" class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all duration-300">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-200 py-2 z-50">
+          <a href="/saved-tests" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Saved Tests</span>
+          </a>
+          <button id="logoutBtnDropdown" class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </li>
+    </div>
+  </nav>
+</header>
+
+<main class="flex-grow max-w-7xl mx-auto px-8 py-16">
+
+    <section class="text-center mb-16">
+      <h1 class="text-5xl font-extrabold text-slate-900 mb-6">
+        About <span class="text-blue-600">The Project</span>
+      </h1>
+     
+    </section>
+
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
+      <div class="glass-card p-8 rounded-3xl">
+        <div class="w-12 h-12 rounded-2xl bg-blue-600/10 flex items-center justify-center mb-6 text-2xl">🎯</div>
+        <h3 class="font-bold text-xl mb-3">Research Objective</h3>
+        <p class="text-slate-500 leading-relaxed text-sm">
+          Conduct a comprehensive comparative analysis of ML & DL models for object detection, evaluating their performance across multiple metrics.
+        </p>
+      </div>
+
+      <div class="glass-card p-8 rounded-3xl">
+        <div class="w-12 h-12 rounded-2xl bg-indigo-600/10 flex items-center justify-center mb-6 text-2xl">📊</div>
+        <h3 class="font-bold text-xl mb-3">Performance Evaluation</h3>
+        <p class="text-slate-500 leading-relaxed text-sm">
+          Assess accuracy, precision, and computational efficiency of YOLO, CNN, ResNet-18, MobileNet, KNN, SVM, and Ensemble methods.
+        </p>
+      </div>
+
+      <div class="glass-card p-8 rounded-3xl">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-600/10 flex items-center justify-center mb-6 text-2xl">🧠</div>
+        <h3 class="font-bold text-xl mb-3">Methodology</h3>
+        <p class="text-slate-500 leading-relaxed text-sm">
+          Utilize standardized datasets and high-performance testing environments to ensure fair comparison between statistical and neural approaches.
+        </p>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <div class="glass-card rounded-3xl p-10 border border-slate-100">
+        <h2 class="text-3xl font-extrabold text-slate-900 mb-10 flex items-center">
+            <span class="w-8 h-8 bg-blue-600 rounded-lg mr-4"></span>
+            Deep Learning Models
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div class="model-line">
+            <h3 class="font-bold text-xl text-slate-900 mb-2">YOLO (You Only Look Once)</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">
+              A state-of-the-art, real-time object detection system that frames detection as a regression problem, achieving remarkable speed in a single pass.
+            </p>
+          </div>
+          <div class="model-line">
+            <h3 class="font-bold text-xl text-slate-900 mb-2">CNN (Convolutional Neural Network)</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">
+              Custom-built 4-block architecture designed for hierarchical feature extraction from grid-like image data topology.
+            </p>
+          </div>
+          <div class="model-line">
+            <h3 class="font-bold text-xl text-slate-900 mb-2">ResNet-18</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">
+              Residual Neural Network architecture utilizing skip connections to solve vanishing gradients in deep training cycles.
+            </p>
+          </div>
+          <div class="model-line">
+            <h3 class="font-bold text-xl text-slate-900 mb-2">MobileNet</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">
+              Lightweight architecture optimized for mobile and embedded vision using depthwise separable convolutions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-24">
+      <div class="glass-card rounded-3xl p-10 border border-slate-100">
+        <h2 class="text-3xl font-extrabold text-slate-900 mb-10 flex items-center">
+            <span class="w-8 h-8 bg-emerald-600 rounded-lg mr-4"></span>
+            Machine Learning Models
+        </h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div class="model-line">
+            <h3 class="font-bold text-xl text-slate-900 mb-2">KNN (K-Nearest Neighbors)</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">
+              Instance-based learning algorithm that classifies objects based on the proximity in feature space.
+            </p>
+          </div>
+          <div class="model-line">
+            <h3 class="font-bold text-xl text-slate-900 mb-2">SVM (Support Vector Machine)</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">
+              High-dimensional hyperplane optimization used for robust class separation and linear/non-linear classification.
+            </p>
+          </div>
+          <div class="model-line">
+            <h3 class="font-bold text-xl text-slate-900 mb-2">Decision Tree</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">
+              Tree-structured model utilizing hierarchical entropy reduction for interpretable rule-based detection.
+            </p>
+          </div>
+          <div class="model-line">
+            <h3 class="font-bold text-xl text-slate-900 mb-2">Random Forest</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">
+              Ensemble approach constructing multiple decision trees to reduce overfitting and improve collective accuracy.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+   <section class="mt-24 px-6 py-24 bg-white rounded-[3.5rem] border border-slate-100 shadow-[0_20px_50px_rgba(0,0,0,0.02)]">
+      <div class="max-w-4xl mx-auto text-center mb-20">
+        <div class="inline-block px-4 py-1.5 mb-5 text-[10px] font-bold tracking-[0.2em] text-blue-600 uppercase bg-blue-50 rounded-full">Technical Stack</div>
+        <h2 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6">Built With Modern Technologies</h2>
+        <p class="text-slate-500 font-medium text-lg">Powering high-precision object detection through a robust stack of industry-standard tools.</p>
+      </div>
+
+      <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        <div class="tech-card bg-slate-50/50 border border-slate-100 p-8 rounded-[2rem]">
+          <div class="text-4xl mb-6">🔥</div>
+          <h3 class="font-bold text-xl text-slate-900 mb-2">Flask</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Backend REST server powering detection routes</p>
+        </div>
+
+        <div class="tech-card bg-slate-50/50 border border-slate-100 p-8 rounded-[2rem]">
+          <div class="text-4xl mb-6">🧠</div>
+          <h3 class="font-bold text-xl text-slate-900 mb-2">PyTorch</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Trains CNN / ResNet / YOLO models</p>
+        </div>
+
+        <div class="tech-card bg-slate-50/50 border border-slate-100 p-8 rounded-[2rem]">
+          <div class="text-4xl mb-6">📷</div>
+          <h3 class="font-bold text-xl text-slate-900 mb-2">OpenCV</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Frame capture & image preprocessing</p>
+        </div>
+
+        <div class="tech-card bg-slate-50/50 border border-slate-100 p-8 rounded-[2rem]">
+          <div class="text-4xl mb-6">🔢</div>
+          <h3 class="font-bold text-xl text-slate-900 mb-2">NumPy</h3>
+          <p class="text-slate-500 text-sm leading-relaxed">Matrix operations & dataset vectorization</p>
+        </div>
+      </div>
+    </section>
+
+</main>
+
+<footer class="bg-white border-t border-slate-100 py-12">
+  <div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center text-slate-400 text-sm font-medium">
+    <div class="flex items-center space-x-2 text-slate-900 mb-4 md:mb-0">
+      <span class="text-blue-600 text-xl font-black">🧠</span>
+      <span class="font-bold tracking-tight text-lg">Objectify</span>
+    </div>
+    <span>© 2026 Objectify Intelligence. Academic Research Project.</span>
+  </div>
+</footer>
+
+<script>
+  function checkAuthAndUpdateUI() {
+    const token = localStorage.getItem('authToken');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const logoutBtnDropdown = document.getElementById('logoutBtnDropdown');
+    const dropdownArrow = document.getElementById('dropdownArrow');
+    
+    if (token) {
+      if (profileDropdown) {
+        profileDropdown.classList.remove('hidden');
+        if (profileEmail && user.email) {
+          profileEmail.textContent = user.email.split('@')[0];
+        }
+      }
+      
+      // Toggle dropdown
+      if (profileBtn && dropdownMenu) {
+        profileBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dropdownMenu.classList.toggle('hidden');
+          dropdownArrow.style.transform = dropdownMenu.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+          if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.classList.add('hidden');
+            dropdownArrow.style.transform = 'rotate(0deg)';
+          }
+        });
+      }
+      
+      // Logout
+      if (logoutBtnDropdown) {
+        logoutBtnDropdown.addEventListener('click', (e) => {
+          e.preventDefault();
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('user');
+          location.reload();
+        });
+      }
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkAuthAndUpdateUI);
+  } else {
+    checkAuthAndUpdateUI();
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up | Objectify</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { 
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #ffffff;
+    }
+    .mesh-gradient {
+        background-color: #ffffff;
+        background-image: 
+            radial-gradient(at 0% 0%, hsla(210,100%,93%,1) 0, transparent 50%), 
+            radial-gradient(at 100% 100%, hsla(210,100%,95%,1) 0, transparent 50%);
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(226, 232, 240, 1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.2);
+        transform: translateY(-1px);
+    }
+    .input-field {
+        background: rgba(248, 250, 252, 0.8);
+        border: 1.5px solid rgba(226, 232, 240, 1);
+        transition: all 0.3s ease;
+    }
+    .input-field:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    .divider-line {
+        background: linear-gradient(to right, transparent, rgba(226, 232, 240, 1), transparent);
+    }
+    .password-strength {
+        height: 4px;
+        border-radius: 2px;
+        background-color: #e2e8f0;
+        overflow: hidden;
+    }
+    .strength-bar {
+        height: 100%;
+        width: 0%;
+        transition: all 0.3s ease;
+    }
+    
+    /* Toast Notification Styles */
+    .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        background-color: white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        z-index: 1000;
+        animation: slideInUp 0.3s ease-out;
+    }
+    .toast.success {
+        color: #166534;
+        background-color: #dcfce7;
+        border-left: 4px solid #22c55e;
+    }
+    .toast.error {
+        color: #991b1b;
+        background-color: #fee2e2;
+        border-left: 4px solid #ef4444;
+    }
+    @keyframes slideInUp {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOutDown {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+    }
+    
+    /* Password visibility toggle */
+    .password-toggle {
+        cursor: pointer;
+        user-select: none;
+    }
+  </style>
+</head>
+
+<body class="text-slate-900 flex flex-col min-h-screen mesh-gradient">
+
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
+  <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+    <!-- Logo LEFT -->
+    <div class="flex items-center space-x-2">
+      <div class="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-100">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <circle cx="12" cy="11" r="3"/>
+          <path d="M12 8v0m0 6v0m3-3v0m-6 0v0"/>
+        </svg>
+      </div>
+      <a href="/" class="text-xl font-[800] hover:text-blue-600 transition-colors">Objectify</a>
+    </div>
+
+    <!-- Navigation CENTER -->
+    <ul class="flex items-center gap-8">
+      <li><a href="/" class="text-base font-semibold text-slate-700 hover:text-slate-900 transition-colors">Home</a></li>
+      <li><a href="/about" class="text-base font-semibold text-slate-700 hover:text-slate-900 transition-colors">About</a></li>
+      <li><a href="/live-upload" class="text-base font-semibold text-slate-700 hover:text-slate-900 transition-colors">Live Upload</a></li>
+      <li><a href="/help" class="text-base font-semibold text-slate-700 hover:text-slate-900 transition-colors">Help</a></li>
+    </ul>
+
+    <!-- RIGHT: Login link (placeholder for consistency) -->
+    <div class="flex items-center gap-3">
+      <a href="/login" class="text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded-lg transition-all duration-300">Login</a>
+    </div>
+  </nav>
+</header>
+
+<main class="flex-grow flex items-center justify-center px-8 py-20">
+  <div class="w-full max-w-md">
+    
+    <!-- Welcome Section -->
+    <div class="text-center mb-10">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-3 tracking-tight">Create Account</h1>
+      <p class="text-slate-500 text-lg">Join our community and start detecting objects</p>
+    </div>
+
+    <!-- Signup Form Card -->
+    <div class="glass-card rounded-3xl p-10 mb-8">
+      <form id="signupForm" class="space-y-5">
+        
+        <!-- Full Name Input -->
+        <div>
+          <label class="block text-sm font-bold text-slate-700 mb-2.5">Full Name</label>
+          <input 
+            type="text" 
+            name="fullName"
+            placeholder="John Doe"
+            class="input-field w-full px-5 py-3.5 rounded-[1.2rem] text-slate-900 placeholder-slate-400 font-medium"
+            required
+          />
+        </div>
+
+        <!-- Email Input -->
+        <div>
+          <label class="block text-sm font-bold text-slate-700 mb-2.5">Email Address</label>
+          <input 
+            type="email" 
+            name="email"
+            placeholder="you@example.com"
+            class="input-field w-full px-5 py-3.5 rounded-[1.2rem] text-slate-900 placeholder-slate-400 font-medium"
+            required
+          />
+        </div>
+
+        <!-- Password Input -->
+        <div>
+          <label class="block text-sm font-bold text-slate-700 mb-2.5">Password</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              name="password"
+              placeholder="••••••••"
+              id="passwordInput"
+              class="input-field w-full px-5 py-3.5 pr-12 rounded-[1.2rem] text-slate-900 placeholder-slate-400 font-medium"
+              required
+            />
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility('passwordInput', 'eyeIcon1')"
+              class="password-toggle absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-blue-600 transition-colors"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="eyeIcon1">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="password-strength mt-2">
+            <div class="strength-bar bg-red-500" id="strengthBar"></div>
+          </div>
+          <p class="text-xs text-slate-500 mt-2">Password must be at least 8 characters</p>
+        </div>
+
+        <!-- Confirm Password Input -->
+        <div>
+          <label class="block text-sm font-bold text-slate-700 mb-2.5">Confirm Password</label>
+          <div class="relative">
+            <input 
+              type="password" 
+              name="confirmPassword"
+              placeholder="••••••••"
+              id="confirmPasswordInput"
+              class="input-field w-full px-5 py-3.5 pr-12 rounded-[1.2rem] text-slate-900 placeholder-slate-400 font-medium"
+              required
+            />
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility('confirmPasswordInput', 'eyeIcon2')"
+              class="password-toggle absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 hover:text-blue-600 transition-colors"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="eyeIcon2">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Terms Checkbox -->
+        <label class="flex items-start gap-3 cursor-pointer">
+          <input type="checkbox" name="terms" class="w-5 h-5 rounded mt-0.5 border-slate-300 text-blue-600 focus:ring-blue-500" required/>
+          <span class="text-sm text-slate-600 leading-relaxed">
+            I agree to the <a href="#" class="text-blue-600 font-bold hover:underline">Terms of Service</a> and <a href="#" class="text-blue-600 font-bold hover:underline">Privacy Policy</a>
+          </span>
+        </label>
+
+        <!-- Signup Button -->
+        <button 
+          type="submit"
+          class="btn-primary w-full text-white font-bold py-3.5 rounded-[1.2rem] transition-all duration-300 shadow-lg mt-7"
+          id="signupBtn"
+        >
+          Create Account
+        </button>
+
+      </form>
+
+      <!-- Divider -->
+      <div class="flex items-center gap-4 my-8">
+        <div class="flex-1 divider-line h-px"></div>
+        <span class="text-sm text-slate-400 font-medium">or</span>
+        <div class="flex-1 divider-line h-px"></div>
+      </div>
+
+      <!-- Social Signup Options -->
+      <div class="space-y-3">
+        <button type="button" class="w-full border border-slate-200 hover:border-blue-300 bg-white/50 hover:bg-slate-50 text-slate-700 font-bold py-3.5 rounded-[1.2rem] flex items-center justify-center gap-3 transition-all duration-300">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.889-2.868 5.776-5.744 5.776-1.025 0-1.99-.195-2.868-.584a5.880 5.880 0 0 0 4.022-5.12 5.880 5.880 0 0 1-3.367 5.856 5.85 5.85 0 0 1-1.367.073 8.557 8.557 0 0 0 5.114-3.27 8.557 8.557 0 0 0 2.071-5.757z"/>
+          </svg>
+          Sign up with Google
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Login Link -->
+    <div class="text-center">
+      <p class="text-slate-600 font-medium">
+        Already have an account? 
+        <a href="/login" class="text-blue-600 font-bold hover:text-blue-700 transition-colors">Sign in</a>
+      </p>
+    </div>
+
+  </div>
+</main>
+
+<script>
+  // Toast Notification Function
+  function showToast(message, type = 'success', duration = 2000) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let icon = '';
+    if (type === 'success') icon = '✓';
+    else if (type === 'error') icon = '✕';
+    
+    toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.animation = 'slideOutDown 0.3s ease-out forwards';
+      setTimeout(() => toast.remove(), 300);
+    }, duration);
+  }
+  
+  // Password visibility toggle
+  function togglePasswordVisibility(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    
+    if (input.type === 'password') {
+      input.type = 'text';
+      // Change to eye-off icon
+      icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-4.753 4.753m4.753-4.753L9.172 9.172m5.656 5.656l-5.656-5.656"/>';
+    } else {
+      input.type = 'password';
+      // Change back to eye icon
+      icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>';
+    }
+  }
+
+  // Password strength indicator
+  const passwordInput = document.getElementById('passwordInput');
+  const strengthBar = document.getElementById('strengthBar');
+
+  if (passwordInput) {
+    passwordInput.addEventListener('input', function() {
+      const password = this.value;
+      let strength = 0;
+
+      if (password.length >= 8) strength += 25;
+      if (password.length >= 12) strength += 25;
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 25;
+      if (/\d/.test(password)) strength += 12.5;
+      if (/[^a-zA-Z\d]/.test(password)) strength += 12.5;
+
+      strengthBar.style.width = strength + '%';
+      
+      if (strength < 50) {
+        strengthBar.className = 'strength-bar bg-red-500';
+      } else if (strength < 75) {
+        strengthBar.className = 'strength-bar bg-yellow-500';
+      } else {
+        strengthBar.className = 'strength-bar bg-green-500';
+      }
+    });
+  }
+
+  // Form submission
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const signupBtn = document.getElementById('signupBtn');
+    const fullName = document.querySelector('input[name="fullName"]').value;
+    const email = document.querySelector('input[name="email"]').value;
+    const password = document.querySelector('input[name="password"]').value;
+    const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+    const termsChecked = document.querySelector('input[name="terms"]').checked;
+    
+    // Validation
+    if (!fullName || !email || !password || !confirmPassword) {
+      showToast('Please fill in all fields', 'error', 2000);
+      return;
+    }
+    
+    if (password.length < 8) {
+      showToast('Password must be at least 8 characters', 'error', 2000);
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      showToast('Passwords do not match', 'error', 2000);
+      return;
+    }
+    
+    if (!termsChecked) {
+      showToast('Please agree to the Terms of Service and Privacy Policy', 'error', 2000);
+      return;
+    }
+    
+    signupBtn.disabled = true;
+    signupBtn.textContent = 'Creating Account...';
+    
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          fullName: fullName,
+          email: email,
+          password: password,
+          confirmPassword: confirmPassword
+        })
+      });
+      
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      let data;
+      
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        // Response is not JSON (likely HTML error page)
+        const html = await response.text();
+        console.error('Server returned HTML instead of JSON:', html);
+        showToast('Server error: Invalid response', 'error', 2000);
+        signupBtn.disabled = false;
+        signupBtn.textContent = 'Create Account';
+        return;
+      }
+      
+      if (response.ok) {
+        // Store token in localStorage
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        // Show success message
+        showToast('Account created successfully!', 'success', 2000);
+        
+        // Redirect to home page
+        window.location.href = '/';
+      } else {
+        const errorMsg = data.message || 'An error occurred. Please try again.';
+        showToast(errorMsg, 'error', 2000);
+        console.error('Signup error:', data);
+        signupBtn.disabled = false;
+        signupBtn.textContent = 'Create Account';
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      showToast('Error: ' + error.message, 'error', 2000);
+      signupBtn.disabled = false;
+      signupBtn.textContent = 'Create Account';
+    }
+  });
+
+  // Hide Get Started button when already on the Signup page
+  (function() {
+    try {
+      if (window && window.location && (window.location.pathname === '/signup' || window.location.pathname.endsWith('/signup'))) {
+        const gs = document.getElementById('getStartedBtn');
+        if (gs) gs.remove();
+      }
+    } catch (e) {
+      // non-fatal, ignore
+      console.warn('Could not hide getStartedBtn:', e);
+    }
+  })();
+</script>
+
+<footer class="bg-white border-t border-slate-100 py-8 mt-12">
+  <div class="max-w-7xl mx-auto px-8 text-center text-slate-400 text-sm font-medium uppercase tracking-[0.2em]">
+    © 2026 Objectify Intelligence Dashboard | Academic Research Project
+  </div>
+</footer>
+
+</body>
+</html>

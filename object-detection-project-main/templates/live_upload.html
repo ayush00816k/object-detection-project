@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analyze | Objectify Intelligence</title>
+
+  <script>
+    // Suppress console warning before Tailwind loads
+    const originalWarn = console.warn;
+    console.warn = function(...args) {
+      if (args[0] && args[0].includes('cdn.tailwindcss.com')) return;
+      originalWarn.apply(console, args);
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { 
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: #ffffff;
+    }
+    .mesh-gradient {
+        background-color: #ffffff;
+        background-image: 
+            radial-gradient(at 0% 0%, hsla(210,100%,93%,1) 0, transparent 50%), 
+            radial-gradient(at 100% 100%, hsla(210,100%,95%,1) 0, transparent 50%);
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
+    }
+    .upload-zone {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 2px dashed #e2e8f0;
+    }
+    .upload-zone:hover {
+        border-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.03);
+        transform: translateY(-2px);
+    }
+    .loader {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #3b82f6;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    #webcam { transform: scaleX(-1); border-radius: 1.5rem; }
+    
+    /* Toast Notification Styles */
+    .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+        border-radius: 0.75rem;
+        background-color: white;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        z-index: 1000;
+        animation: slideInUp 0.3s ease-out;
+    }
+    .toast.success {
+        color: #166534;
+        background-color: #dcfce7;
+        border-left: 4px solid #22c55e;
+    }
+    .toast.error {
+        color: #991b1b;
+        background-color: #fee2e2;
+        border-left: 4px solid #ef4444;
+    }
+    .toast.info {
+        color: #1e40af;
+        background-color: #dbeafe;
+        border-left: 4px solid #3b82f6;
+    }
+    @keyframes slideInUp {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    @keyframes slideOutDown {
+        from {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+    }
+  </style>
+</head>
+
+<body class="text-slate-800 flex flex-col min-h-screen mesh-gradient">
+
+
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
+  <nav class="max-w-7xl mx-auto flex justify-between items-center px-8 py-4">
+    <!-- Logo LEFT -->
+    <div class="flex items-center space-x-2">
+      <div class="bg-blue-600 p-2 rounded-lg shadow-lg shadow-blue-100">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <circle cx="12" cy="11" r="3"/>
+          <path d="M12 8v0m0 6v0m3-3v0m-6 0v0"/>
+        </svg>
+      </div>
+      <span class="text-xl font-[800]">Objectify</span>
+    </div>
+
+    <!-- Navigation CENTER -->
+    <ul class="flex items-center gap-8">
+      <li><a href="/" class="text-base font-semibold text-slate-700">Home</a></li>
+      <li><a href="/about" class="text-base font-semibold text-slate-700">About</a></li>
+      <li><a href="/live-upload" class="text-base font-semibold text-blue-600">Live Upload</a></li>
+      <li><a href="/help" class="text-base font-semibold text-slate-700">Help</a></li>
+    </ul>
+
+    <!-- RIGHT: Profile Dropdown -->
+    <div class="flex items-center gap-3">
+      <li id="profileDropdown" class="relative list-none">
+        <button id="profileBtn" class="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all duration-300">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+          </svg>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-slate-200 py-2 z-50">
+          <a href="/saved-tests" class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Saved Tests</span>
+          </a>
+          <button id="logoutBtnDropdown" class="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </li>
+    </div>
+  </nav>
+</header>
+<main class="flex-grow max-w-6xl mx-auto px-8 py-12 w-full">
+
+  <div id="pageHeader" class="text-center mb-12">
+    <h1 class="text-4xl font-extrabold text-slate-900 mb-4">Intelligence Dashboard</h1>
+    <p class="text-slate-500 text-lg">Deploy 8 neural architectures for high-precision object analysis.</p>
+  </div>
+
+  <div id="loadingOverlay" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center">
+    <div class="bg-white rounded-[2rem] p-10 shadow-2xl text-center max-w-sm w-full mx-4">
+      <div class="loader mx-auto mb-6"></div>
+      <p class="text-xl font-bold text-slate-900">Neural Syncing...</p>
+      <p class="text-slate-500 mt-2">Running comparative analysis across 8 models.</p>
+    </div>
+  </div>
+
+  <div id="uploadSection" class="space-y-8">
+    <button id="backBtn" class="hidden px-6 py-2.5 bg-white border border-slate-200 text-slate-600 rounded-full font-bold hover:bg-slate-50 transition flex items-center gap-2">
+      ←    Reset Selection
+    </button>
+
+    <div id="uploadContainer" class="upload-zone glass-card rounded-[2.5rem] p-16 flex flex-col justify-center items-center cursor-pointer"
+         onclick="document.getElementById('fileInput').click()">
+      <input id="fileInput" type="file" class="hidden" accept="image/*">
+      <div class="w-20 h-20 bg-blue-600 text-white rounded-3xl flex items-center justify-center mb-6 shadow-xl shadow-blue-200">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+          <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+        </svg>
+      </div>
+      <p class="text-2xl font-bold text-slate-900 mb-2">Drop image to analyze</p>
+      <p class="text-slate-500 font-medium mb-4"></p>
+      <span class="px-4 py-1.5 bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-widest rounded-full">Note : Max 10MB</span>
+    </div>
+
+    <div class="flex justify-center w-full">
+      <img id="preview" class="hidden max-h-[500px] max-w-2xl rounded-[2.5rem] shadow-2xl border-8 border-white mb-8" />
+    </div>
+
+    <div id="orDivider" class="flex items-center justify-center gap-4">
+      <div class="h-px bg-slate-200 flex-grow"></div>
+      <span class="text-slate-400 font-bold text-xs tracking-widest uppercase">Or use webcam</span>
+      <div class="h-px bg-slate-200 flex-grow"></div>
+    </div>
+
+    <button id="useWebcamBtn" class="w-full glass-card hover:bg-white rounded-[2rem] py-10 flex flex-col items-center gap-4 group transition-all">
+      <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+        </svg>
+      </div>
+      <span class="font-bold text-slate-700">Analyze through webcam</span>
+    </button>
+
+    <div id="webcamContainer" class="hidden flex flex-col items-center">
+      <video id="webcam" autoplay playsinline class="shadow-2xl mb-8 w-full max-w-2xl border-4 border-white"></video>
+      <div class="flex gap-4">
+        <button id="liveToggleBtn" class="px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-100 transition">Start Live Stream</button>
+        <button id="captureBtn" class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold shadow-lg shadow-blue-100 transition">📸 Snap & Analyze</button>
+      </div>
+    </div>
+
+    <button id="analyzeBtn" class="hidden w-full py-5 rounded-[2rem] bg-slate-900 text-white text-xl font-bold hover:bg-black transition-all shadow-xl shadow-slate-200">
+      Run Neural Scan →
+    </button>
+  </div>
+
+  <section id="results" class="hidden space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div class="flex justify-between items-end mb-8">
+        <div>
+            <h2 class="text-3xl font-extrabold text-slate-900">Analysis Results</h2>
+            <p class="text-slate-500 font-medium">Comparative benchmarking across the neural stack.</p>
+        </div>
+        <button id="testAnotherBtn" class="text-blue-600 font-bold hover:underline flex items-center gap-2">
+            Run New Test
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 glass-card rounded-[2.5rem] p-8">
+        <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+            <span class="w-2 h-2 bg-blue-600 rounded-full"></span> Input Visualization
+        </h3>
+        <img id="resultImage" class="rounded-3xl w-full object-cover mb-8 shadow-lg border-4 border-white" style="max-height: 400px;" />
+        
+        <div class="bg-blue-600 rounded-3xl p-8 text-white shadow-xl shadow-blue-100 flex items-center justify-between">
+          <div>
+            <p class="text-blue-100 text-xs font-bold uppercase tracking-widest mb-1">Final Classification</p>
+            <h4 id="detectedObject" class="text-4xl font-black capitalize">-</h4>
+          </div>
+          <div class="text-right">
+            <p class="text-blue-100 text-xs font-bold uppercase tracking-widest mb-1">Confidence Score</p>
+            <h4 id="detectedConfidence" class="text-5xl font-black">0%</h4>
+          </div>
+        </div>
+
+        <!-- AI Detection Result -->
+        <div id="aiDetectionMinimal" class="mt-6 rounded-2xl border-2 hidden px-5 py-3 flex items-center gap-3" style="display: none;">
+          <span id="aiImageLabel" class="text-lg font-bold flex-1"></span>
+          <div id="aiProgressBox" class="h-5 w-5 rounded transition-all duration-500 flex-shrink-0"></div>
+          <span id="aiScoreMinimal" class="text-lg font-black"></span>
+        </div>
+
+        <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h4 class="font-bold text-slate-900 mb-4">Top 3 Predictors</h4>
+                <div id="top3ModelsList" class="space-y-4"></div>
+            </div>
+            <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+                <h4 class="font-bold text-slate-900 mb-3">Model Conclusion</h4>
+                <p id="classificationSummary" class="text-slate-500 text-sm leading-relaxed">-</p>
+            </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-[2.5rem] p-8">
+        <h3 class="text-lg font-bold mb-6 flex items-center gap-2">
+            <span class="w-2 h-2 bg-indigo-600 rounded-full"></span> Model Metrics
+        </h3>
+        <div id="modelScoreList" class="space-y-4"></div>
+      </div>
+    </div>
+
+    <div class="glass-card rounded-[3rem] p-10">
+      <h3 class="text-xl font-bold mb-8">Comparative Performance Graph</h3>
+      <canvas id="chart" height="100"></canvas>
+    </div>
+
+    <div class="glass-card rounded-[3rem] p-10 border border-slate-100">
+        <div class="grid grid-cols-3 gap-8 mb-10 pb-10 border-b border-slate-100">
+            <div class="text-center">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Peak Performer</p>
+                <p id="bestModel" class="text-2xl font-black text-blue-600">-</p>
+            </div>
+            <div class="text-center">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Total Latency</p>
+                <p id="analysisTime" class="text-2xl font-black text-blue-600">-</p>
+            </div>
+            <div class="text-center">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Active Kernels</p>
+                <p id="modelsEvaluated" class="text-2xl font-black text-blue-600">8</p>
+            </div>
+        </div>
+        
+        <p id="summaryText" class="text-slate-500 text-center mb-8 italic">-</p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button id="viewMoreBtn" class="px-8 py-3 bg-slate-100 text-slate-700 rounded-2xl font-bold hover:bg-slate-200 transition">View Detailed Logs</button>
+            <button id="saveTestBtn" class="px-8 py-3 bg-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition flex items-center justify-center gap-2">
+                💾 Save Test
+            </button>
+            <button id="downloadReportBtn" class="px-8 py-3 bg-blue-600 text-white rounded-2xl font-bold shadow-lg shadow-blue-100 hover:bg-blue-700 transition flex items-center justify-center gap-2">
+                📄 Export Report
+            </button>
+        </div>
+
+        <div id="moreDetails" class="hidden mt-10 overflow-hidden rounded-2xl border border-slate-100">
+          <table class="w-full text-left bg-white">
+            <thead class="bg-slate-50 text-slate-400 text-[10px] font-black uppercase tracking-widest">
+              <tr>
+                <th class="py-4 px-6">Architecture</th>
+                <th class="py-4 px-6">Classification</th>
+                <th class="py-4 px-6">Confidence</th>
+                <th class="py-4 px-6">Latency</th>
+              </tr>
+            </thead>
+            <tbody id="modelDetailsList" class="text-sm font-medium text-slate-700"></tbody>
+          </table>
+        </div>
+    </div>
+
+    <div class="bg-blue-50/50 border border-blue-100 rounded-[2rem] p-8">
+      <h3 class="font-bold text-blue-900 mb-4">Neural Insights</h3>
+      <ul id="insightsList" class="space-y-3 text-blue-700 text-sm"></ul>
+    </div>
+
+  </section>
+</main>
+
+<footer class="py-12 border-t border-slate-100">
+  <div class="max-w-6xl mx-auto text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
+    © 2026 Objectify Intelligence Dashboard | Secure Neural Processing
+  </div>
+</footer>
+
+<script>
+// --- LOGIC REMAINS IDENTICAL TO YOUR VERSION ---
+let selectedImage = null;
+let chartInstance = null;
+let liveInterval = null;
+let prevScores = {};
+let isLiveMode = false;
+const { jsPDF } = window.jspdf;
+
+// Toast Notification Function
+function showToast(message, type = 'success', duration = 2000) {
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  
+  let icon = '';
+  if (type === 'success') icon = '✓';
+  else if (type === 'error') icon = '✕';
+  else if (type === 'info') icon = 'ℹ';
+  
+  toast.innerHTML = `<span>${icon}</span><span>${message}</span>`;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.animation = 'slideOutDown 0.3s ease-out forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const elements = {
+    fileInput: document.getElementById('fileInput'),
+    preview: document.getElementById('preview'),
+    analyzeBtn: document.getElementById('analyzeBtn'),
+    useWebcamBtn: document.getElementById('useWebcamBtn'),
+    webcam: document.getElementById('webcam'),
+    captureBtn: document.getElementById('captureBtn'),
+    liveToggleBtn: document.getElementById('liveToggleBtn'),
+    loadingOverlay: document.getElementById('loadingOverlay'),
+    uploadSection: document.getElementById('uploadSection'),
+    results: document.getElementById('results'),
+    resultImage: document.getElementById('resultImage'),
+    detectedObject: document.getElementById('detectedObject'),
+    detectedConfidence: document.getElementById('detectedConfidence'),
+    modelScoreList: document.getElementById('modelScoreList'),
+    bestModel: document.getElementById('bestModel'),
+    analysisTime: document.getElementById('analysisTime'),
+    summaryText: document.getElementById('summaryText'),
+    insightsList: document.getElementById('insightsList'),
+    testAnotherBtn: document.getElementById('testAnotherBtn'),
+    saveTestBtn: document.getElementById('saveTestBtn'),
+    downloadReportBtn: document.getElementById('downloadReportBtn'),
+    uploadContainer: document.getElementById('uploadContainer'),
+    orDivider: document.getElementById('orDivider'),
+    webcamContainer: document.getElementById('webcamContainer'),
+    classificationSummary: document.getElementById('classificationSummary'),
+    backBtn: document.getElementById('backBtn'),
+    viewMoreBtn: document.getElementById('viewMoreBtn'),
+    moreDetails: document.getElementById('moreDetails'),
+    modelDetailsList: document.getElementById('modelDetailsList'),
+    top3ModelsList: document.getElementById('top3ModelsList')
+  };
+
+  elements.backBtn.addEventListener('click', () => location.reload());
+  elements.testAnotherBtn.addEventListener('click', () => location.reload());
+
+  elements.saveTestBtn.addEventListener('click', saveCurrentTest);
+
+  elements.viewMoreBtn.addEventListener('click', () => {
+    elements.moreDetails.classList.toggle('hidden');
+    elements.viewMoreBtn.textContent = elements.moreDetails.classList.contains('hidden') ? 'View Detailed Logs' : 'Hide Logs';
+  });
+
+  function animateCounter(element, startValue, targetValue, duration = 800) {
+    let current = startValue;
+    const diff = targetValue - startValue;
+    const increment = diff / (duration / 16);
+    const timer = setInterval(() => {
+      current += increment;
+      if ((diff > 0 && current >= targetValue) || (diff < 0 && current <= targetValue) || diff === 0) {
+        element.textContent = `${Math.round(targetValue)}%`;
+        clearInterval(timer);
+      } else {
+        element.textContent = `${Math.round(current)}%`;
+      }
+    }, 16);
+  }
+
+  elements.fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        elements.preview.src = ev.target.result;
+        elements.preview.classList.remove('hidden');
+        selectedImage = file;
+        elements.analyzeBtn.classList.remove('hidden');
+        hideInputScreen();
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  elements.useWebcamBtn.addEventListener('click', async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      elements.webcam.srcObject = stream;
+      elements.webcamContainer.classList.remove('hidden');
+      hideInputScreen();
+    } catch (err) {
+      alert('Camera link failed: ' + err.message);
+    }
+  });
+
+  elements.captureBtn.addEventListener('click', () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = elements.webcam.videoWidth;
+    canvas.height = elements.webcam.videoHeight;
+    canvas.getContext('2d').drawImage(elements.webcam, 0, 0);
+    const dataUrl = canvas.toDataURL('image/jpeg');
+    selectedImage = dataURLToFile(dataUrl, 'capture.jpg');
+    isLiveMode = false;
+    analyzeImage(dataUrl);
+  });
+
+  elements.liveToggleBtn.addEventListener('click', () => {
+    if (liveInterval) {
+      cancelAnimationFrame(liveInterval);
+      liveInterval = null;
+      elements.liveToggleBtn.textContent = 'Start Live Stream';
+      elements.liveToggleBtn.classList.replace('bg-rose-500', 'bg-emerald-500');
+      isLiveMode = false;
+    } else {
+      elements.results.classList.remove('hidden');
+      isLiveMode = true;
+      lastFrameTime = 0;
+      frameSendInterval = 1000;  // Send detection every 1000ms
+      sendLiveFrameOptimized();  // Start the loop
+      elements.liveToggleBtn.textContent = 'Terminate Stream';
+      elements.liveToggleBtn.classList.replace('bg-emerald-500', 'bg-rose-500');
+    }
+  });
+
+  let lastFrameTime = 0;
+  let frameSendInterval = 1000;  // Send detection every 1000ms for performance
+
+  async function sendLiveFrameOptimized() {
+    if (!isLiveMode) return;
+    
+    const now = Date.now();
+    
+    // Only send frame for detection analysis every frameSendInterval ms
+    if (now - lastFrameTime >= frameSendInterval) {
+      lastFrameTime = now;
+      
+      const canvas = document.createElement('canvas');
+      canvas.width = elements.webcam.videoWidth;
+      canvas.height = elements.webcam.videoHeight;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.drawImage(elements.webcam, 0, 0);
+      
+      // Use higher JPEG quality but canvas.toBlob is faster than toDataURL
+      canvas.toBlob(async (blob) => {
+        if (!blob || !isLiveMode) return;
+        
+        const formData = new FormData();
+        formData.append('file', blob, 'frame.jpg');
+        
+        // Add JWT token
+        const token = localStorage.getItem('authToken');
+        const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+        
+        try {
+          const res = await fetch('/api/detect', {
+            method: 'POST',
+            body: formData,
+            headers: headers
+          });
+          
+          if (!res.ok) throw new Error(`Server error: ${res.status}`);
+          const data = await res.json();
+          if (data.error) throw new Error(data.error);
+          
+          // Convert blob to persistent base64 data URL for display (fixes broken saved webcam images)
+          const reader = new FileReader();
+          reader.onload = () => {
+            const frameData = reader.result;
+            updateResults(data, frameData);
+          };
+          reader.readAsDataURL(blob);
+        } catch (err) { 
+          console.error('Live Detection Error:', err);
+        }
+      }, 'image/jpeg', 0.85);  // 85% quality for faster processing
+    }
+    
+    // Continue animation loop for smooth webcam display
+    liveInterval = requestAnimationFrame(sendLiveFrameOptimized);
+  }
+
+  elements.analyzeBtn.addEventListener('click', () => {
+    if (!selectedImage && !elements.preview.src) {
+      alert('Please select or upload an image first');
+      return;
+    }
+    isLiveMode = false;
+    analyzeImage(elements.preview.src);
+  });
+
+  async function analyzeImage(imageDataUrl) {
+    // Validate inputs
+    if (!selectedImage && (!imageDataUrl || imageDataUrl === 'undefined')) {
+      alert('Please select or upload an image first');
+      return;
+    }
+    
+    // Check authentication
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      alert('Please login to analyze images');
+      window.location.href = '/login';
+      return;
+    }
+    
+    elements.loadingOverlay.classList.remove('hidden');
+    const formData = new FormData();
+    
+    // Use selected file if available, otherwise convert data URL
+    if (selectedImage) {
+      formData.append('file', selectedImage);
+    } else if (imageDataUrl && imageDataUrl !== 'undefined') {
+      try {
+        formData.append('file', dataURLToFile(imageDataUrl, 'img.jpg'));
+      } catch (err) {
+        elements.loadingOverlay.classList.add('hidden');
+        alert('Error processing image: ' + err.message);
+        return;
+      }
+    } else {
+      elements.loadingOverlay.classList.add('hidden');
+      alert('Please select or upload an image first');
+      return;
+    }
+    
+    try {
+      const headers = { 'Authorization': `Bearer ${token}` };
+      const res = await fetch('/api/detect', { 
+        method: 'POST', 
+        body: formData,
+        headers: headers
+      });
+      
+      if (res.status === 401) {
+        throw new Error('Session expired. Please login again.');
+      } else if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || `Server error: ${res.status}`);
+      }
+      
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      updateResults(data, imageDataUrl);
+    } catch (err) { 
+      console.error('Analysis error:', err);
+      alert('Analysis error: ' + err.message); 
+    }
+    finally { elements.loadingOverlay.classList.add('hidden'); }
+  }
+
+  async function saveCurrentTest() {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      showToast('Please login to save tests', 'error', 2000);
+      return;
+    }
+
+    elements.saveTestBtn.disabled = true;
+    elements.saveTestBtn.textContent = '⏳ Saving...';
+
+    try {
+      const resultData = JSON.parse(localStorage.getItem('resultData') || '{}');
+      const resultImage = localStorage.getItem('resultImage') || '';
+      const detectionMethod = isLiveMode ? 'webcam' : 'upload';
+
+      const saveData = {
+        image_data: resultImage,
+        results: resultData,
+        method: detectionMethod
+      };
+
+      const response = await fetch('/api/save-test-result', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(saveData)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const result = await response.json();
+      elements.saveTestBtn.textContent = '✓ Saved!';
+      showToast('Test result saved successfully!', 'success', 2000);
+      
+      // Reset button after 2 seconds
+      setTimeout(() => {
+        elements.saveTestBtn.disabled = false;
+        elements.saveTestBtn.textContent = '💾 Save Test';
+      }, 2000);
+    } catch (error) {
+      console.error('Error saving test:', error);
+      showToast('Failed to save test: ' + error.message, 'error', 2000);
+      elements.saveTestBtn.disabled = false;
+      elements.saveTestBtn.textContent = '💾 Save Test';
+    }
+  }
+
+  function updateResults(data, imageSrc) {
+    // Map backend response to frontend expected fields
+    const finalPrediction = data["Final Prediction"] || data.object || "Unknown";
+    const bestModel = data["Best Model"] || data.best_model || "Unknown";
+    const confidence = data["Confidence (%)"] || data.confidence || 0;
+    const allScores = data["All Scores"] || data.scores || {};
+    const allPredictions = data["All Predictions"] || data.model_predictions || {};
+    const top3Models = data["Top 3 Models"] || [];
+    
+    console.log('Backend Response:', data);
+    console.log('Mapped Values:', { finalPrediction, bestModel, confidence, allScores, allPredictions, top3Models });
+    
+    elements.uploadSection.classList.add('hidden');
+    elements.results.classList.remove('hidden');
+    elements.resultImage.src = imageSrc;
+    elements.detectedObject.textContent = finalPrediction;
+    elements.analysisTime.textContent = `0.5s`;
+    elements.bestModel.textContent = bestModel;
+
+    if (isLiveMode) {
+      elements.detectedConfidence.textContent = `${confidence.toFixed(1)}%`;
+    } else {
+      elements.detectedConfidence.textContent = `0%`;
+      setTimeout(() => animateCounter(elements.detectedConfidence, 0, confidence), 300);
+    }
+
+    // Model Scores List (all models)
+    elements.modelScoreList.innerHTML = '';
+    Object.entries(allScores).forEach(([model, score]) => {
+      if (score > 0 || allPredictions[model] !== "N/A") {  // Only show models that didn't fail
+        const div = document.createElement('div');
+        div.className = 'flex justify-between items-center p-4 rounded-2xl bg-slate-50 border border-slate-100';
+        const scoreValue = typeof score === 'number' ? score.toFixed(1) : score;
+        if (isLiveMode) {
+          div.innerHTML = `<span class="font-bold text-slate-600">${model}</span><span class="text-xl font-black text-slate-800">${scoreValue}%</span>`;
+        } else {
+          div.innerHTML = `<span class="font-bold text-slate-600">${model}</span><span class="text-xl font-black text-slate-800 odometer">0%</span>`;
+          setTimeout(() => animateCounter(div.querySelector('.odometer'), 0, parseFloat(scoreValue)), 600);
+        }
+        elements.modelScoreList.appendChild(div);
+      }
+    });
+
+    // Top 3 Predictors (from backend calculation)
+    elements.top3ModelsList.innerHTML = '';
+    if (top3Models && Array.isArray(top3Models) && top3Models.length > 0) {
+      top3Models.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = 'flex items-center gap-3 p-4 rounded-2xl bg-slate-50/50 border border-slate-100 hover:bg-blue-50 transition';
+        const medal = ['🥇', '🥈', '🥉'][index] || '';
+        const confidence = typeof item.confidence === 'number' ? item.confidence.toFixed(1) : item.confidence;
+        div.innerHTML = `
+          <span class="text-2xl">${medal}</span>
+          <div class="flex-1">
+            <span class="font-bold text-slate-900">${item.model || 'Model'}</span>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mt-1">Output: ${item.prediction || 'N/A'}</span>
+          </div>
+          <span class="font-black text-blue-600 text-lg">${confidence}%</span>
+        `;
+        elements.top3ModelsList.appendChild(div);
+      });
+    } else {
+      // Fallback: generate top 3 from all scores if not provided by backend
+      const top3 = Object.entries(allScores).sort((a, b) => b[1] - a[1]).slice(0, 3);
+      top3.forEach((item, index) => {
+        const [model, score] = item;
+        const div = document.createElement('div');
+        div.className = 'flex items-center gap-3 p-4 rounded-2xl bg-slate-50/50 border border-slate-100 hover:bg-blue-50 transition';
+        const medal = ['🥇', '🥈', '🥉'][index] || '';
+        const scoreValue = typeof score === 'number' ? score.toFixed(1) : score;
+        div.innerHTML = `
+          <span class="text-2xl">${medal}</span>
+          <div class="flex-1">
+            <span class="font-bold text-slate-900">${model}</span>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mt-1">Output: ${allPredictions[model] || 'N/A'}</span>
+          </div>
+          <span class="font-black text-blue-600 text-lg">${scoreValue}%</span>
+        `;
+        elements.top3ModelsList.appendChild(div);
+      });
+    }
+
+    // Model Details Table
+    elements.modelDetailsList.innerHTML = '';
+    Object.entries(allScores).forEach(([model, score]) => {
+      if (score > 0 || allPredictions[model] !== "N/A") {  // Only show models that didn't fail
+        const pred = allPredictions[model] || finalPrediction;
+        const scoreValue = typeof score === 'number' ? score.toFixed(1) : score;
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-slate-50';
+        tr.innerHTML = `<td class="py-4 px-6 font-bold text-slate-900">${model}</td><td class="py-4 px-6 capitalize">${pred}</td><td class="py-4 px-6 font-bold text-blue-600">${scoreValue}%</td><td class="py-4 px-6 text-slate-400">~0.5s</td>`;
+        elements.modelDetailsList.appendChild(tr);
+      }
+    });
+
+    // Chart (showing only successful models)
+    const labels = Object.keys(allScores).filter(model => allScores[model] > 0 || allPredictions[model] !== "N/A");
+    const values = labels.map(label => {
+      const val = allScores[label];
+      return typeof val === 'number' ? val : 0;
+    });
+    
+    if (chartInstance) {
+      chartInstance.data.labels = labels;
+      chartInstance.data.datasets[0].data = values;
+      chartInstance.update();
+    } else {
+      chartInstance = new Chart(document.getElementById('chart'), {
+        type: 'bar',
+        data: {
+          labels,
+          datasets: [{ label: 'Confidence (%)', data: values, backgroundColor: '#3b82f6', borderRadius: 12 }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true, max: 100 } }, plugins: { legend: { display: false } } }
+      });
+    }
+
+    elements.classificationSummary.textContent = `Hybrid consensus identifies object as "${finalPrediction}" with primary validation via ${bestModel}.`;
+    elements.summaryText.textContent = `Inference cycle finalized in ~0.5s across multiple concurrent architectures.`;
+    elements.insightsList.innerHTML = `
+      <li class="flex items-center gap-2">● Dominant Architecture: <strong>${bestModel}</strong> (${confidence.toFixed(1)}%)</li>
+      <li class="flex items-center gap-2">● Latency Benchmark: <strong>~0.5s</strong> per inference</li>
+      <li class="flex items-center gap-2">● Neural Nodes: ${Object.keys(allScores).filter(m => allScores[m] > 0 || allPredictions[m] !== "N/A").length} Active</li>
+    `;
+
+    // ==================== AI IMAGE DETECTION ====================
+    const aiDetectionMinimal = document.getElementById('aiDetectionMinimal');
+    const aiImageLabel = document.getElementById('aiImageLabel');
+    const aiScoreMinimal = document.getElementById('aiScoreMinimal');
+    const aiProgressBox = document.getElementById('aiProgressBox');
+    
+    if (data["AI Detection"] && data["AI Detection"] !== null) {
+      const aiData = data["AI Detection"];
+      console.log('AI Detection Data:', aiData);
+      
+      // Show the minimal display
+      aiDetectionMinimal.style.display = 'flex';
+      
+      // Set label
+      if (aiData.is_ai_generated) {
+        aiImageLabel.textContent = 'Likely to be AI-generated';
+      } else {
+        aiImageLabel.textContent = 'Not likely to be AI-generated';
+      }
+      
+      // Set score
+      const aiConfidence = aiData.confidence;
+      if (isLiveMode) {
+        aiScoreMinimal.textContent = `${aiConfidence.toFixed(1)}%`;
+      } else {
+        aiScoreMinimal.textContent = '0%';
+        setTimeout(() => animateCounter(aiScoreMinimal, 0, aiConfidence), 800);
+      }
+      
+      // Simple color logic based on AI or Real
+      let boxColor;
+      
+      if (aiData.is_ai_generated) {
+        // Red for AI - shade based on confidence (0-100%)
+        // Use power function to make color change more visible
+        const opacity = Math.pow(aiConfidence / 100, 0.6);  // More dramatic color change
+        boxColor = `rgba(239, 68, 68, ${opacity})`;  // Red with opacity
+        aiDetectionMinimal.className = 'mt-6 rounded-2xl border-2 border-slate-200 flex items-center gap-3 px-5 py-3';
+      } else {
+        // Green for Real Photo - shade based on confidence directly
+        const opacity = Math.pow(aiConfidence / 100, 0.6);  // More dramatic color change
+        boxColor = `rgba(34, 197, 94, ${opacity})`;  // Green with opacity
+        aiDetectionMinimal.className = 'mt-6 rounded-2xl border-2 border-slate-200 flex items-center gap-3 px-5 py-3';
+      }
+      
+      // Apply color only to the small box
+      aiProgressBox.style.backgroundColor = boxColor;
+      aiProgressBox.style.border = 'none';
+    } else {
+      aiDetectionMinimal.style.display = 'none';
+    }
+
+    localStorage.setItem('resultData', JSON.stringify(data));
+    localStorage.setItem('resultImage', imageSrc);
+  }
+ downloadReportBtn.addEventListener('click', async () => {
+    const data = JSON.parse(localStorage.getItem('resultData'));
+    const imageSrc = localStorage.getItem('resultImage');
+    const chartImg = document.getElementById('chart').toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const timestamp = new Date().toLocaleString();
+
+    pdf.setFillColor(59, 130, 246);
+    pdf.rect(0, 0, pageWidth, 40, 'F');
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(22);
+    pdf.setFont("helvetica", "bold");
+    pdf.text('Object Detection Analysis Report', 105, 20, { align: 'center' });
+    
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`Generated on: ${timestamp}`, 105, 30, { align: 'center' });
+
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+    pdf.text('1. Analyzed Image Source', 15, 55);
+
+    const imgProps = pdf.getImageProperties(imageSrc);
+    const maxWidth = 180;
+    const maxHeight = 100;
+    const ratio = imgProps.width / imgProps.height;
+    
+    let finalWidth = maxWidth;
+    let finalHeight = maxWidth / ratio;
+
+    if (finalHeight > maxHeight) {
+        finalHeight = maxHeight;
+        finalWidth = maxHeight * ratio;
+    }
+
+    const xPos = (pageWidth - finalWidth) / 2;
+    pdf.addImage(imageSrc, 'JPEG', xPos, 60, finalWidth, finalHeight);
+
+    let startY = 60 + finalHeight + 20; 
+    pdf.setFontSize(14);
+    pdf.text('2. Detailed Model Performance', 15, startY);
+    
+    startY += 10;
+    pdf.setFillColor(240, 240, 240);
+    pdf.rect(15, startY - 5, 180, 8, 'F');
+    pdf.setFontSize(10);
+    pdf.text('Model', 20, startY);
+    pdf.text('Prediction', 70, startY);
+    pdf.text('Confidence', 120, startY);
+    pdf.text('Processing Time', 160, startY);
+
+    pdf.setFont("helvetica", "normal");
+    Object.entries(data.scores).forEach(([model, score], index) => {
+        const rowY = startY + 10 + (index * 8);
+        const pred = data.model_predictions[model] || data.object;
+        pdf.text(model, 20, rowY);
+        pdf.text(pred, 70, rowY);
+        pdf.text(`${score}%`, 120, rowY);
+        pdf.text(`${data.time}s`, 160, rowY);
+        pdf.setDrawColor(220, 220, 220);
+        pdf.line(15, rowY + 2, 195, rowY + 2);
+    });
+
+    pdf.setFontSize(8);
+    pdf.text('Page 1 of 2', 105, 285, { align: 'center' });
+
+    pdf.addPage();
+    
+    pdf.setFontSize(14);
+    pdf.setFont("helvetica", "bold");
+    pdf.text('3. Performance Visualization', 15, 20);
+    pdf.addImage(chartImg, 'PNG', 15, 30, 180, 90);
+
+    pdf.text('4. Detection Summary Note', 15, 140);
+    pdf.setFontSize(11);
+    pdf.setFont("helvetica", "normal");
+    pdf.setFillColor(245, 247, 250);
+    pdf.rect(15, 145, 180, 40, 'F');
+    
+    const conclusion = [
+        `Inference Conclusion:`,
+        `• Primary identification: "${data.object}"`,
+        `• Peak model accuracy: ${data.confidence}% using ${data.best_model}`,
+        `• Total multi-model classification time: ${data.time} seconds`
+    ];
+    pdf.text(conclusion, 20, 155);
+
+    pdf.setDrawColor(59, 130, 246);
+    pdf.setLineWidth(1);
+    pdf.line(15, 270, 195, 270);
+    pdf.setFontSize(10);
+    pdf.text('Real-Time Object Classifier © 2026', 15, 278);
+    pdf.text('Page 2 of 2', 105, 285, { align: 'center' });
+
+    pdf.save('Analysis_report.pdf');
+  });
+
+
+  function hideInputScreen() {
+    elements.backBtn.classList.remove('hidden');
+    elements.uploadContainer.classList.add('hidden');
+    elements.orDivider.classList.add('hidden');
+    elements.useWebcamBtn.classList.add('hidden');
+  }
+
+  function dataURLToFile(dataurl, filename) {
+    const arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]);
+    let n = bstr.length, u8arr = new Uint8Array(n);
+    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    return new File([u8arr], filename, { type: mime });
+  }
+
+  // Auth check & logout
+  function checkAuth() {
+    const token = localStorage.getItem('authToken');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    if (!token) {
+      window.location.href = '/signup';
+      return;
+    }
+    
+    // Setup profile dropdown
+    const profileBtn = document.getElementById('profileBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const profileEmail = document.getElementById('profileEmail');
+    const logoutBtnDropdown = document.getElementById('logoutBtnDropdown');
+    const dropdownArrow = document.getElementById('dropdownArrow');
+    
+    if (profileEmail && user.email) {
+      profileEmail.textContent = user.email.split('@')[0];
+    }
+    
+    // Toggle dropdown
+    if (profileBtn && dropdownMenu) {
+      profileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('hidden');
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.classList.add('hidden');
+        }
+      });
+    }
+    
+    // Logout
+    if (logoutBtnDropdown) {
+      logoutBtnDropdown.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        window.location.href = '/';
+      });
+    }
+  }
+
+  checkAuth();
+});
+
+</script>
+</body>
+</html>

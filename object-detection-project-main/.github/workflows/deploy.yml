@@ -1,0 +1,28 @@
+name: Deploy to Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Deploy to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+         git clone https://Shreyas2545:${HF_TOKEN}@huggingface.co/spaces/Shreyas2545/objectify hf-space
+          rsync -av --delete \
+            --exclude='.git' \
+            --exclude='.github' \
+            ./ hf-space/
+          cd hf-space
+          git add .
+          git commit -m "Auto deploy from GitHub" || echo "No changes to commit"
+          git push

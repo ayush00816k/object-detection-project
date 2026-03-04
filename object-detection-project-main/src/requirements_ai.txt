@@ -1,0 +1,17 @@
+# AI Image Detection Additional Dependencies
+# Install with: pip install -r requirements_ai.txt
+
+# Core ML/AI libraries
+transformers>=4.30.0          # HuggingFace models (optional but recommended)
+scipy>=1.10.0                 # Scientific computing for FFT analysis
+scikit-image>=0.21.0          # Image processing
+
+# Already required by your project (verify these are in main requirements.txt):
+# torch>=2.0.0
+# torchvision>=0.15.0
+# opencv-python>=4.8.0
+# numpy>=1.24.0
+# Pillow>=9.5.0
+
+# Optional for better performance:
+# accelerate>=0.20.0          # Faster inference with HuggingFace models

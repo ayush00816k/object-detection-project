@@ -1,0 +1,46 @@
+C:\Users\shrey\AppData\Roaming\Python\Python313\site-packages\torchvision\models\_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+C:\Users\shrey\AppData\Roaming\Python\Python313\site-packages\torchvision\models\_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Epoch 1/8 - loss: 0.8384 - train_acc: 43.90% - val_acc: 100.00%
+Saved improved model to checkpoints/ai_detector.pth (val_acc 100.00%)
+Epoch 2/8 - loss: 0.6138 - train_acc: 65.85% - val_acc: 90.91%
+Epoch 3/8 - loss: 0.4452 - train_acc: 90.24% - val_acc: 90.91%
+Epoch 4/8 - loss: 0.3447 - train_acc: 90.24% - val_acc: 90.91%
+Epoch 5/8 - loss: 0.2385 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 6/8 - loss: 0.1964 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 7/8 - loss: 0.1411 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 8/8 - loss: 0.1117 - train_acc: 100.00% - val_acc: 100.00%
+Training complete. Best val acc: 100.00%
+C:\Users\shrey\AppData\Roaming\Python\Python313\site-packages\torchvision\models\_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and may be removed in the future, please use 'weights' instead.
+  warnings.warn(
+C:\Users\shrey\AppData\Roaming\Python\Python313\site-packages\torchvision\models\_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and may be removed in the future. The current behavior is equivalent to passing `weights=ResNet18_Weights.IMAGENET1K_V1`. You can also use `weights=ResNet18_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Starting training: epochs=8, batch_size=16, train_samples=49, val_samples=12
+Epoch 1/8 - loss: 0.4611 - train_acc: 85.71% - val_acc: 100.00%
+Saved improved model to checkpoints/ai_detector.pth (val_acc 100.00%)
+Epoch 2/8 - loss: 0.0839 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 3/8 - loss: 0.0579 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 4/8 - loss: 0.0651 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 5/8 - loss: 0.0221 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 6/8 - loss: 0.0648 - train_acc: 97.96% - val_acc: 100.00%
+Epoch 7/8 - loss: 0.0104 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 8/8 - loss: 0.0086 - train_acc: 100.00% - val_acc: 100.0Starting training: epochs=16, batch_size=16, train_samples=49, val_samples=12
+Epoch 1/16 - loss: 0.3124 - train_acc: 93.88% - val_acc: 100.00%
+Saved improved model to checkpoints/ai_detector.pth (val_acc 100.00%)
+Epoch 2/16 - loss: 0.1382 - train_acc: 95.92% - val_acc: 100.00%
+Epoch 3/16 - loss: 0.0469 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 4/16 - loss: 0.0588 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 5/16 - loss: 0.0272 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 6/16 - loss: 0.0506 - train_acc: 97.96% - val_acc: 100.00%
+Epoch 7/16 - loss: 0.0538 - train_acc: 97.96% - val_acc: 100.00%
+Epoch 8/16 - loss: 0.0258 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 9/16 - loss: 0.0169 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 10/16 - loss: 0.0160 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 11/16 - loss: 0.0365 - train_acc: 97.96% - val_acc: 100.00%
+Epoch 12/16 - loss: 0.0136 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 13/16 - loss: 0.0194 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 14/16 - loss: 0.0179 - train_acc: 100.00% - val_acc: 100.00%
+Epoch 15/16 - loss: 0.0330 - train_acc: 97.96% - val_acc: 100.00%
+Epoch 16/16 - loss: 0.0116 - train_acc: 100.00% - val_acc: 100.00%
+Training complete. Best val acc: 100.00%

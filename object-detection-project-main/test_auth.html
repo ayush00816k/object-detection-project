@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Flow Test</title>
+</head>
+<body>
+    <h1>Authentication Flow Test</h1>
+    
+    <h2>1. Signup Test</h2>
+    <button onclick="testSignup()">Test Signup</button>
+    <div id="signupResult"></div>
+    
+    <h2>2. Login Test</h2>
+    <button onclick="testLogin()">Test Login</button>
+    <div id="loginResult"></div>
+    
+    <h2>3. Protected Endpoint Test</h2>
+    <button onclick="testProtected()">Test Protected Route</button>
+    <div id="protectedResult"></div>
+    
+    <h2>Browser Console Messages:</h2>
+    <button onclick="location.href='/signup'">Go to Signup Page</button>
+    <button onclick="location.href='/login'">Go to Login Page</button>
+    <button onclick="location.href='/'">Go to Home Page</button>
+    
+    <script>
+        const BASE_URL = "http://localhost:5000";
+        
+        async function testSignup() {
+            const result = document.getElementById('signupResult');
+            result.innerHTML = '<p>Testing signup...</p>';
+            
+            try {
+                const response = await fetch(`${BASE_URL}/api/signup`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        fullName: "Test User",
+                        email: "test" + Date.now() + "@example.com",
+                        password: "Test12345",
+                        confirmPassword: "Test12345"
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('authToken', data.token);
+                    result.innerHTML = `<p style="color: green;">✓ Signup successful! Token saved.</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    result.innerHTML = `<p style="color: red;">✗ Signup failed: ${data.message}</p>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<p style="color: red;">✗ Error: ${error.message}</p>`;
+            }
+        }
+        
+        async function testLogin() {
+            const result = document.getElementById('loginResult');
+            result.innerHTML = '<p>Testing login...</p>';
+            
+            try {
+                const response = await fetch(`${BASE_URL}/api/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: "test@example.com",
+                        password: "Test12345"
+                    })
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('authToken', data.token);
+                    result.innerHTML = `<p style="color: green;">✓ Login successful!</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    result.innerHTML = `<p style="color: orange;">ℹ No user found (expected on first test): ${data.message}</p>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<p style="color: red;">✗ Error: ${error.message}</p>`;
+            }
+        }
+        
+        async function testProtected() {
+            const result = document.getElementById('protectedResult');
+            result.innerHTML = '<p>Testing protected route...</p>';
+            
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                result.innerHTML = '<p style="color: orange;">No token found. Signup first!</p>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${BASE_URL}/api/user/profile`, {
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                
+                const data = await response.json();
+                if (response.ok) {
+                    result.innerHTML = `<p style="color: green;">✓ Protected route accessible!</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    result.innerHTML = `<p style="color: red;">✗ Access denied: ${data.message}</p>`;
+                }
+            } catch (error) {
+                result.innerHTML = `<p style="color: red;">✗ Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

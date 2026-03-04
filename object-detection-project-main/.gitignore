@@ -1,0 +1,38 @@
+# Models
+*.pt
+*.h5
+*.onnx
+
+# Datasets
+data/
+dataset/
+datasets/
+
+# Videos & images
+*.mp4
+*.avi
+*.mov
+
+# Cache
+__pycache__/
+.cache/
+.env
+
+# Virtual env
+venv/
+
+
+# Ignore datasets
+data/
+datasets/
+images/
+*.jpg
+*.png
+
+# Ignore training artifacts
+*.pt
+*.ckpt
+
+# Python cache
+__pycache__/
+*.pyc
